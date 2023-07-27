@@ -13,6 +13,8 @@ const newItem = (demo_id: string): Item => {
   }
 }
 
+let expectingItem = ''
+
 export default function Realtime({
   itemColor,
   userId,
@@ -23,6 +25,8 @@ export default function Realtime({
   const { db } = useElectric()!
   const { demo } = useDemoContext()!
 
+  const [count, setCount] = useState(24)
+
   const { results: liveItems } = useLiveQuery(
     db.items.liveMany({
       where: {
@@ -31,22 +35,43 @@ export default function Realtime({
       orderBy: {
         inserted_at: 'asc',
       },
-      take: 24,
+      take: count,
     }),
   )
 
-  const add = async () => {
-    await db.items.create({
-      data: newItem(demo.id),
-    })
+  const add = () => {
+    const item = newItem(demo.id)
+
+    expectingItem = item.id
+    console.time('full-insert')
+
+    db.items
+      .create({
+        data: item,
+      })
+      .then(() => console.time('insert-to-live'))
+      .catch((x) => console.error(x))
   }
 
-  const clear = async () => {
-    await db.items.deleteMany({
-      where: {
-        demo_id: demo.id,
-      },
-    })
+  const clear = () => {
+    db.items
+      .deleteMany({
+        where: {
+          demo_id: demo.id,
+        },
+      })
+      .catch((x) => console.error(x))
+  }
+
+  const runTest = () => {
+    db.raw({
+      sql: `INSERT INTO sessions (id, inserted_at) VALUES ('...')`,
+    }).catch((e) => console.error(e))
+  }
+
+  if (liveItems?.some((x) => x.id === expectingItem)) {
+    console.timeEnd('insert-to-live')
+    console.timeEnd('full-insert')
   }
 
   if (liveItems === undefined) {
@@ -55,10 +80,20 @@ export default function Realtime({
 
   return (
     <div className="mb-4">
+      WHY
       <div>
         <label className={'section-label text-small ' + itemColor}>
           User: {userId}
         </label>
+        <label>
+          Limit:{' '}
+          <input
+            type="number"
+            value={count}
+            onChange={(e) => setCount(Number(e.target.value))}
+          />
+        </label>
+        <button onClick={() => runTest()}>TEST</button>
       </div>
       <ItemsWidget
         add={add}

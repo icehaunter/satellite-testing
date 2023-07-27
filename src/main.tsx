@@ -13,11 +13,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <RealtimeExample userId={1} itemColor="text-green-400" />
         </ElectricSetup>
       </div>
-      <div className="px-3 md:px-4">
+      {/* <div className="px-3 md:px-4">
         <ElectricSetup dbName="user2" demoName="multi-user" bootstrapItems={2}>
           <RealtimeExample userId={2} itemColor="text-purple-400" />
         </ElectricSetup>
-      </div>
+      </div> */}
     </div>
   </React.StrictMode>,
 )

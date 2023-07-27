@@ -54,16 +54,16 @@ export async function getOrCreateSession(db: DB, defaultSessionId: string) {
   return newSession
 }
 
-export const getOrCreateSessionId = (defaultSessionId: string) => {
-  let sessionId
+export const getOrCreateSessionId = (defaultSessionId: string): string => {
+  let sessionId: string
 
   const urlParams = new URLSearchParams(window.location.search)
   if (urlParams.has('sessionId')) {
-    sessionId = urlParams.get('sessionId')
+    sessionId = urlParams.get('sessionId')!
 
     cache.set(SESSION_ID_KEY, sessionId, SESSION_TTL)
   } else {
-    sessionId = cache.get(SESSION_ID_KEY)
+    sessionId = cache.get(SESSION_ID_KEY) as string
 
     if (sessionId === null) {
       sessionId = defaultSessionId

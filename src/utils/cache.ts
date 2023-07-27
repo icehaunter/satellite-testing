@@ -1,11 +1,11 @@
-const get = (key: string) => {
+const get = (key: string): unknown => {
   const itemStr = localStorage.getItem(key)
 
   if (!itemStr) {
     return null
   }
 
-  const item = JSON.parse(itemStr)
+  const item = JSON.parse(itemStr) as {expiry: number, value: unknown}
   const now = new Date()
 
   if (now.getTime() > item.expiry) {
@@ -17,7 +17,7 @@ const get = (key: string) => {
   return item.value
 }
 
-const set = (key: string, value: any, ttl: number) => {
+const set = (key: string, value: unknown, ttl: number) => {
   const now = new Date()
 
   const item = {

@@ -2,8 +2,8 @@ import { Item } from './electric'
 // import styles from './styles.module.css'
 
 type Props = {
-  add: () => Promise<void>
-  clear: () => Promise<void>
+  add: () => void
+  clear: () => void
   items: Item[] | undefined
   inProgress?: boolean
   disableWhenInProgress: boolean
@@ -23,14 +23,6 @@ const ItemsWidget = ({
   return (
     <>
       <div>
-        {itemsArray.map((item: Item) => (
-          <div
-            key={item.id}
-            className={'w-10 h-10 relative inline-block mr-2 bg-current'}
-          />
-        ))}
-      </div>
-      <div>
         <button
           className="button button--secondary button--outline me-2"
           disabled={shouldDisable}
@@ -45,6 +37,16 @@ const ItemsWidget = ({
         >
           Clear
         </button>
+      </div>
+      <div className='grid grid-cols-4 gap-3'>
+        {itemsArray.map((item: Item) => (
+          <div
+            key={item.id}
+            className={'h-30 relative inline-block bg-current p-2 font-mono'}
+          >
+            <span className="text-white">{item.id}</span>
+          </div>
+        ))}
       </div>
     </>
   )

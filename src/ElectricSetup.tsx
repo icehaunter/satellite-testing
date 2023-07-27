@@ -69,10 +69,11 @@ function App({
 
       setDemoContext({ demo: demo, session: session })
       setElectric(Electric)
-      ;(window as any)['Electric' + demoName] = Electric
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+      ;(window as any)['Electric' + dbName] = Electric
     }
 
-    init()
+    init().catch(x => console.error('Failed in app init: ', x))
 
     return () => {
       console.log('cleanup called')
@@ -80,10 +81,11 @@ function App({
     }
   }, [])
 
+
   return (
     <ElectricProvider db={electric}>
       <DemoContext.Provider value={demoContext}>
-        {electric && demoContext ? children : []}
+        {electric && demoContext ? children : ['NOTHING']}
       </DemoContext.Provider>
     </ElectricProvider>
   )

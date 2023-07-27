@@ -72,6 +72,6 @@ export default [
       "\n    DROP TRIGGER IF EXISTS delete_main_tournaments_into_oplog;\n    ",
       "\n    CREATE TRIGGER delete_main_tournaments_into_oplog\n       AFTER DELETE ON main.tournaments\n       WHEN 1 == (SELECT flag from _electric_trigger_settings WHERE tablename == 'main.tournaments')\n    BEGIN\n      INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n      VALUES ('main', 'tournaments', 'DELETE', json_object('id', old.id), NULL, json_object('id', old.id, 'name', old.name, 'demo_id', old.demo_id, 'inserted_at', old.inserted_at), NULL);\n    END;\n    "
     ],
-    "version": "20230724091613_638"
+    "version": "20230726081747_587"
   }
 ]
